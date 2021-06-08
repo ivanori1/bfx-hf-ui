@@ -2,9 +2,8 @@ export class LoginPage {
     clearDataAndReset() {
         cy.get('button').then(($btn) => {
             if ($btn.hasClass('red')) {
-                cy.get('[data-uid="Clear Data & Reset"]').click()
-                cy.get('[data-uid="Save Credentials"]').should('be.visible')
-
+                cy.get('button.red').should('be.visible')
+                cy.get('button.red').click()
             }
         })
 
