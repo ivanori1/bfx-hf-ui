@@ -7,6 +7,7 @@ import { v4 } from 'uuid'
 import UIActions from '../../actions/ui'
 import WSActions from '../../actions/ws'
 import AOActions from '../../actions/ao'
+import marketActions from '../../actions/market'
 
 const debug = Debug('hfui:rx:m:ws-hfui-server:msg')
 
@@ -49,6 +50,7 @@ export default (alias, store) => (e = {}) => {
       case 'info.markets': {
         const [,, markets] = payload
         store.dispatch(WSActions.recvDataMarkets(markets))
+        store.dispatch(marketActions.getCCYFullNames())
         break
       }
 

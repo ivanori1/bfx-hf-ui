@@ -15,6 +15,13 @@ const saveLayout = (layout, id) => ({
   },
 })
 
+const storeUnsavedLayout = (layout) => ({
+  type: types.STORE_UNSAVED_LAYOUT,
+  payload: {
+    layout,
+  },
+})
+
 const createLayout = (id, tradingEnabled) => ({
   type: types.CREATE_LAYOUT,
   payload: {
@@ -97,6 +104,10 @@ const openNotifcationPanel = () => ({
   type: types.OPEN_NOTIFICATIONS,
 })
 
+const switchNotifcationPanel = () => ({
+  type: types.SWITCH_NOTIFICATIONS,
+})
+
 const firstLogin = () => ({
   type: types.FIRST_LOGIN,
 })
@@ -123,6 +134,10 @@ const updateStrategyContent = content => ({
 const updateStrategyId = id => ({
   type: types.UPDATE_STRATEGY_ID,
   payload: { id },
+})
+
+const clearStrategies = () => ({
+  type: types.CLEAR_STRATEGIES,
 })
 
 const setTradingMode = (isPaperTrading) => ({
@@ -158,6 +173,7 @@ const changeReffilBalanceModalState = isVisible => ({
 export default {
   setRoute,
   saveLayout,
+  storeUnsavedLayout,
   createLayout,
   deleteLayout,
   setActiveMarket,
@@ -181,4 +197,6 @@ export default {
   changeReffilBalanceModalState,
   changeBadInternetConnectionState,
   setIsOrderExecuting,
+  clearStrategies,
+  switchNotifcationPanel,
 }

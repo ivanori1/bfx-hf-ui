@@ -43,6 +43,7 @@ function getInitialState() {
     isBadInternetConnection: false,
     isOrderExecuting: false,
     content: {},
+    unsavedLayout: {},
   }
 
   if (!localStorage) {
@@ -110,6 +111,15 @@ function reducer(state = getInitialState(), action = {}) {
       }
     }
 
+    case types.STORE_UNSAVED_LAYOUT: {
+      const { layout } = payload
+
+      return {
+        ...state,
+        unsavedLayout: layout,
+      }
+    }
+
     case types.UPDATE_SETTINGS: {
       return {
         ...state,
@@ -128,6 +138,13 @@ function reducer(state = getInitialState(), action = {}) {
       return {
         ...state,
         notificationsVisible: false,
+      }
+    }
+
+    case types.SWITCH_NOTIFICATIONS: {
+      return {
+        ...state,
+        notificationsVisible: !state.notificationsVisible,
       }
     }
 
@@ -268,6 +285,12 @@ function reducer(state = getInitialState(), action = {}) {
           ...state.content,
           id,
         },
+      }
+    }
+    case types.CLEAR_STRATEGIES: {
+      return {
+        ...state,
+        content: {},
       }
     }
     case types.SET_TRADING_MODE: {
