@@ -7,8 +7,8 @@ Cypress.Commands.add('firstLoginTour', (counter) => {
             cy.get('[title="Next"]').click()
         }
         cy.get('[title="Finish"]').click()
-        cy.get('.react-joyride__overlay').should('not.be.visible')
-        cy.get('.__floater__open').should('not.be.visible')
+        cy.get('.react-joyride__overlay').should('not.exist')
+        cy.get('.__floater__open').should('not.exist')
 
     })
 })
