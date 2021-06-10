@@ -18,12 +18,10 @@ export class TradingTerminalPage {
     }
     openComponent(componentName) {
         cy.get('.icon-plus').click()
-        cy.get('.hfui-modal__content').should('be.visible')
-                cy.get('.hfui-modal__actions button').click()
-        cy.get('.error').should('contain', 'Invalid Component')
-        cy.get('.hfui-dropdown__button').click()
-        cy.get('.hfui-modal__content ul li').contains(componentName).click()
-        cy.get(".hfui-modal__actions button").click();
+        cy.get('[role="dialog"]').should('be.visible')
+        cy.get('[role="dialog"] .ufx-dropdown').click()
+        cy.get('[role="dialog"] .ufx-dropdown ul li').contains(componentName).click()
+        cy.get('.modal__footer button').click();
     }
     moveComponent() {
         cy.get('.icon-move').trigger('mousedown').trigger('mousemove', { clientX: 1000, clientY: 200 }).trigger('mouseleave')
