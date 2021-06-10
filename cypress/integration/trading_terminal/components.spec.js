@@ -98,4 +98,28 @@ describe('Manipulate Postion Table', () => {
     it('Opens Position Table', () => {
         onTradingTerminalPage.openComponent('Positions Table')
     })
+    it('create 2 positions with different pairs', () => {
+
+    //TODO 
+
+    })
+    it('Close Position', () => {
+        cy.get('.icon-cancel').click()
+    })
 })
+
+describe('Manipulate balances table', () => {
+
+    it('Open Balance Table', () => {
+        onTradingTerminalPage.openComponent('Balances Table')
+
+    })
+    it('Click on cog (settings) and test hide zero balances ', () => {
+        cy.get('.icon-settings-icon').click()
+        cy.get('.header').contains('Settings')
+        cy.get('.ufx-checkbox [type="checkbox"]').uncheck({force: true})
+        cy.get('.footer button').contains('Close').click()
+        cy.get('[role="gridcell"]').contains('0.00000000')
+        })
+
+    })
