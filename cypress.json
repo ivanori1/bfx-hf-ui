@@ -1,8 +1,12 @@
 {
+    "testFiles": [
+        "*.feature"
+        ],
     "baseUrl": "http://localhost:3000/",
     "ignoreTestFiles": "**/examples/*",
     "viewportHeight": 1080,
     "viewportWidth": 1920,
     "video": false, 
-    "screenshots": false
+    "screenshots": false,
+    "ignoreTestFiles": ["*.js", "*.md"]
 }
