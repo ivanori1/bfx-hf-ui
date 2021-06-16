@@ -41,3 +41,15 @@ When("Type inputs that are not matching", () => {
 Then("SAVE CREDENTIALS will be disabled", () => {
   authPage.saveCredentialsDisabled();
 });
+
+When('Type matching passwords', ()=> {
+    const password = 'test1'
+    cy.get('form').then(form => {
+        cy.wrap(form).find('[placeholder="Password"]').clear().type(password);
+        cy.wrap(form).find('[placeholder="Confirm password"]').clear().type(password)
+    })
+})
+
+Then('Save Credentials button will be enabled', () => {
+    cy.get('button').should('not.have.class', 'disabled')
+})

@@ -14,3 +14,7 @@ Feature: First login to application
         Given Password, Confirm password input will be visible
         When Type inputs that are not matching
         Then SAVE CREDENTIALS will be disabled
+    Scenario: Type matching passwords [SAVE CREDENTIALS] button will be enabled
+        Given Password, Confirm password input will be visible
+        When Type matching passwords
+        Then Save Credentials button will be enabled
