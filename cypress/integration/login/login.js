@@ -78,10 +78,14 @@ Then("Trading terminal page is open", () => {
   cy.get(".hfui-navbarbutton").eq(2).should("contain.text", "Strategy Editor");
   cy.get(".hfui-navbarbutton").eq(3).should("contain.text", "Settings");
 });
-Given('You are on Trading Terminal Page', () => {
-      navigateTo.tradingTerminalPage()
+Given('{string} page is open', (page) => {
+  cy.get('.hfui-navbarbutton').contains(page).click()
+  // cy.get('.hfui-navbarbutton').contains('Trading Terminal').click()
 })
 
-Then('Trading tour should be visible', ()=> {
-  cy.firstLoginTour(4)
+When('You are on {string} Page', (page)=> {
+  cy.get('button').contains(page).and('have.class', 'active')
+})
+Then('Trading tour should have {int} steps', (steps)=> {
+  cy.firstLoginTour(steps-1)
 })

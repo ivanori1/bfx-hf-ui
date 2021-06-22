@@ -23,6 +23,14 @@ Feature: First login to application
         When Click on Save credentials
         Then Trading terminal page is open
     Scenario: First time you login Tour with red blinking point will be visible on Plus Icon of Trading Terminal Page
-        Given Trading terminal page is open
-        When You are on Trading Terminal Page
-        Then Trading tour should be visible
+        Given "Trading Terminal" page is open
+        When You are on "Trading Terminal" Page
+        Then Trading tour should have 5 steps
+    Scenario: First time you login Tour with red blinking point will be visible Market Data Page
+        Given "Market Data" page is open
+        When You are on "Market Data" Page
+        Then Trading tour should have 1 steps
+  Scenario: First time you login Tour with red blinking point will be visible on Strategy Editor Page
+        Given "Strategy Editor" page is open
+        When You are on "Strategy Editor" Page
+        Then Trading tour should have 3 steps
