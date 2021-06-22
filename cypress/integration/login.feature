@@ -9,7 +9,6 @@ Feature: First login to application
         Given Open application
         When Form is visible
         Then IF Clear Data & Reset button is visible click on it
-
     Scenario: Not possible to [Save Credentials] without matching passwords
         Given Password, Confirm password input will be visible
         When Type inputs that are not matching

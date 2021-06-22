@@ -87,5 +87,5 @@ When('You are on {string} Page', (page)=> {
   cy.get('button').contains(page).and('have.class', 'active')
 })
 Then('Trading tour should have {int} steps', (steps)=> {
-  cy.firstLoginTour(steps-1)
+  cy.firstLoginTour(steps)
 })
