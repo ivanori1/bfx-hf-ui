@@ -1,5 +1,5 @@
 ///  <reference types="cypress"/>
-import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
+import { Given, When, Then, And } from "cypress-cucumber-preprocessor/steps";
 import { authPage } from "../../support/page_objects/loginPage";
 import { navigateTo } from "../../support/page_objects/navigationPage"
 
@@ -88,4 +88,33 @@ When('You are on {string} Page', (page)=> {
 })
 Then('Trading tour should have {int} steps', (steps)=> {
   cy.firstLoginTour(steps)
+})
+
+When("Click on Order form Submit API keys", ()=> {
+  cy.get('.icon-api').should('be.visible').click()
+
+})
+
+Then("API form is visible", () => {
+  cy.get('.hfui-orderform__modal-form').should('be.visible')
+  cy.get('.hfui-orderform__modal-buttons').should('be.visible')
+})
+
+Then('Status is locked', ()=> {
+  cy.get('.hfui-statusbar__left > p:last-of-type').contains('LOCKED')
+})
+And('Status HF Disconnected', ()=> {
+  cy.get('.hfui-statusbar__right').within(($statusbar) => {
+      cy.wrap($statusbar).find('p').should('contain.text', 'HF Disconnected')
+      cy.wrap($statusbar).find('span').should('have.class', 'red')
+  })
+})
+
+When('API Credentials form is visible', ()=> {
+  cy.get('section:last-of-type > p').contains('API credentials')
+})
+Then('Click on link will open paper trading CS', ()=> {
+  cy.get('.hfui-settings__option-description > p').contains('Paper Trading').should('have.attr', 'href',
+  'https://support.bitfinex.com/hc/en-us/articles/900001525006-Paper-Trading-test-learn-and-simulate-trading-strategies-')
+  cy.get('.hfui-settings__option-description > p').contains('Paper Trading').should('have.attr', 'target', '_blank')
 })

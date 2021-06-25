@@ -1,7 +1,4 @@
 Feature: First login to application
-
-
-
     As a valid user
     I want to login into application
 
@@ -24,7 +21,7 @@ Feature: First login to application
     Scenario: First time you login Tour with red blinking point will be visible on Plus Icon of Trading Terminal Page
         Given "Trading Terminal" page is open
         When You are on "Trading Terminal" Page
-        Then Trading tour should have 5 steps
+        Then Trading tour should have 3 steps
     Scenario: First time you login Tour with red blinking point will be visible Market Data Page
         Given "Market Data" page is open
         When You are on "Market Data" Page
@@ -33,3 +30,16 @@ Feature: First login to application
         Given "Strategy Editor" page is open
         When You are on "Strategy Editor" Page
         Then Trading tour should have 3 steps
+Scenario: Verify that API banner is visible on Order Form
+        Given "Trading Terminal" page is open
+        When Click on Order form Submit API keys
+        Then API form is visible
+Scenario: In footer Status should be Locked WS should show Connected (green point) but HF should be Disconnected (red point)
+        Given "Trading Terminal" page is open
+        When API form is visible
+        Then Status is locked 
+        And Status HF Disconnected
+Scenario: Click on Settings on the navigation bar, you will see Production API keys and  Paper trading API (with link)
+        Given "Settings" page is open
+        When API Credentials form is visible
+        Then Click on link will open paper trading CS
