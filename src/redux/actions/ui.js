@@ -84,17 +84,17 @@ export const closeNotificationPanel = () => ({
   type: types.CLOSE_NOTIFICATIONS,
 })
 
-export const removeNotification = (uid) => ({
+export const removeNotification = (cid) => ({
   type: types.REMOVE_NOTIFICATION,
   payload: {
-    uid,
+    cid,
   },
 })
 
-export const removeNotifications = (uids) => ({
+export const removeNotifications = (cids) => ({
   type: types.REMOVE_NOTIFICATIONS,
   payload: {
-    uids,
+    cids,
   },
 })
 
@@ -157,6 +157,11 @@ export const changeTradingModeModalState = (isVisible) => ({
   payload: { isVisible },
 })
 
+export const changeOldFormatModalState = (isVisible) => ({
+  type: types.CHANGE_OLD_FORMAT_MODAL_STATE,
+  payload: { isVisible },
+})
+
 export const changeBadInternetConnectionState = (isVisible) => ({
   type: types.CHANGE_BAD_INTERNET_STATE,
   payload: { isVisible },
@@ -192,6 +197,11 @@ export const changeLayout = (incomingLayout) => ({
   payload: { incomingLayout },
 })
 
+export const changeTickersVolumeUnit = key => ({
+  type: types.CHANGE_TICKERS_VOLUME_UNIT,
+  payload: { key },
+})
+
 export default {
   saveLayout,
   storeUnsavedLayout,
@@ -222,4 +232,6 @@ export default {
   clearStrategies,
   switchNotifcationPanel,
   setLayoutID,
+  changeTickersVolumeUnit,
+  changeOldFormatModalState,
 }
