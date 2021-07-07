@@ -80,7 +80,6 @@ Then("Trading terminal page is open", () => {
 });
 Given('{string} page is open', (page) => {
   cy.get('.hfui-navbarbutton').contains(page).click()
-  // cy.get('.hfui-navbarbutton').contains('Trading Terminal').click()
 })
 
 When('You are on {string} Page', (page)=> {

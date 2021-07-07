@@ -21,7 +21,7 @@ Feature: First login to application
     Scenario: First time you login Tour with red blinking point will be visible on Plus Icon of Trading Terminal Page
         Given "Trading Terminal" page is open
         When You are on "Trading Terminal" Page
-        Then Trading tour should have 3 steps
+        Then Trading tour should have 4 steps
     Scenario: First time you login Tour with red blinking point will be visible Market Data Page
         Given "Market Data" page is open
         When You are on "Market Data" Page

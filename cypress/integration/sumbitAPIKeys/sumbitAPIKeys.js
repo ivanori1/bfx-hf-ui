@@ -22,7 +22,7 @@ When("Select {string}", (dropdown) => {
   cy.get(".dropdown-field").click();
   cy.get("ul li").contains(dropdown).click();
 });
-And("Click Unclock button", () => {
+And("Click Unlock button", () => {
   cy.get("button").contains("Unlock").click();
 });
 And('Type Password', ()=> {
