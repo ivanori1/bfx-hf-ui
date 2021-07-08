@@ -1,7 +1,7 @@
 import { defineStep } from 'cypress-cucumber-preprocessor/steps'
 
 defineStep("Open application", () => {
-    cy.visit("/");
+    cy.visit("/", {timeout: 60000});
     cy.get("button");
   });
 
