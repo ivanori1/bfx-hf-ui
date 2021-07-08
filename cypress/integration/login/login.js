@@ -3,13 +3,7 @@ import { Given, When, Then, And } from "cypress-cucumber-preprocessor/steps";
 import { authPage } from "../../support/page_objects/loginPage";
 import { navigateTo } from "../../support/page_objects/navigationPage"
 
-Given("Open application", () => {
-  cy.visit("/");
-  cy.get("button");
-});
-When("Form is visible", () => {
-  cy.get('form').should('be.visible')
-});
+
 Then("IF Clear Data & Reset button is visible click on it", () => {
   cy.get("button").then(($btn) => {
     if ($btn.hasClass("red")) {
@@ -67,7 +61,6 @@ Then("Trading terminal page is open", () => {
     "Trading Terminal",
     "Market Data",
     "Strategy Editor",
-    "Settings",
   ];
 
   cy.get(".hfui-navbarbutton")
@@ -76,15 +69,8 @@ Then("Trading terminal page is open", () => {
     .and("have.class", "active");
   cy.get(".hfui-navbarbutton").eq(1).should("contain.text", "Market Data");
   cy.get(".hfui-navbarbutton").eq(2).should("contain.text", "Strategy Editor");
-  cy.get(".hfui-navbarbutton").eq(3).should("contain.text", "Settings");
 });
-Given('{string} page is open', (page) => {
-  cy.get('.hfui-navbarbutton').contains(page).click()
-})
 
-When('You are on {string} Page', (page)=> {
-  cy.get('button').contains(page).and('have.class', 'active')
-})
 Then('Trading tour should have {int} steps', (steps)=> {
   cy.firstLoginTour(steps)
 })
@@ -107,13 +93,4 @@ And('Status HF Disconnected', ()=> {
       cy.wrap($statusbar).find('p').should('contain.text', 'HF Disconnected')
       cy.wrap($statusbar).find('span').should('have.class', 'red')
   })
-})
-
-When('API Credentials form is visible', ()=> {
-  cy.get('section:last-of-type > p').contains('API credentials')
-})
-Then('Click on link will open paper trading CS', ()=> {
-  cy.get('.hfui-settings__option-description > p').contains('Paper Trading').should('have.attr', 'href',
-  'https://support.bitfinex.com/hc/en-us/articles/900001525006-Paper-Trading-test-learn-and-simulate-trading-strategies-')
-  cy.get('.hfui-settings__option-description > p').contains('Paper Trading').should('have.attr', 'target', '_blank')
 })

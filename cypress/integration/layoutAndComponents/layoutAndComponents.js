@@ -3,31 +3,12 @@ import { Given, When, Then, And } from "cypress-cucumber-preprocessor/steps";
 import { authPage } from "../../support/page_objects/loginPage";
 import { navigateTo } from "../../support/page_objects/navigationPage"
 
-Given("Open application", () => {
-  cy.visit("/");
-  cy.get("button");
-});
-
-When("Form is visible", () => {
-  cy.get("form").should("be.visible");
-});
-And ("IF Create a password is visible then Save Credentials", () => {
-    cy.get("button").then(($btn) => {
-        if (!$btn.hasClass("red")) {
-            cy.get('[placeholder="Password"]').type("test1");
-            cy.get('[placeholder="Confirm password"]').type("test1");
-        }
-      });
-});
 
 Then('Login to app', ()=> {
   cy.get('[placeholder="Password"]').type("test1");
   cy.get('button.green').click()
 })
 
-Given('{string} page is open', (page) => {
-  cy.get('.hfui-navbarbutton').contains(page).click()
-})
 When('Remove every component', ()=> {
   cy.get('.icon-cancel').its('length').then(res => {
     if (res > 0) {

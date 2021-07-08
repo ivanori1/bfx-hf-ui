@@ -39,7 +39,3 @@ Scenario: In footer Status should be Locked WS should show Connected (green poin
         When API form is visible
         Then Status is locked 
         And Status HF Disconnected
-Scenario: Click on Settings on the navigation bar, you will see Production API keys and  Paper trading API (with link)
-        Given "Settings" page is open
-        When API Credentials form is visible
-        Then Click on link will open paper trading CS

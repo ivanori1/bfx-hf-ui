@@ -2,21 +2,8 @@
 import { Given, When, Then, And } from "cypress-cucumber-preprocessor/steps";
 import { authPage } from "../../support/page_objects/loginPage";
 import { navigateTo } from "../../support/page_objects/navigationPage";
-Given("Open application", () => {
-  cy.visit("/");
-  cy.get("button");
-});
-When("Form is visible", () => {
-  cy.get("form").should("be.visible");
-});
-Then("IF Create a password is visible then Save Credentials", () => {
-    cy.get("button").then(($btn) => {
-        if (!$btn.hasClass("red")) {
-            cy.get('[placeholder="Password"]').type("test1");
-            cy.get('[placeholder="Confirm password"]').type("test1");
-        }
-      });
-});
+
+
 
 When("Select {string}", (dropdown) => {
   cy.get(".dropdown-field").click();
@@ -46,14 +33,6 @@ Then("Trading terminal page is open", () => {
 Given('{string} page is open', (page) => {
   cy.get('.hfui-navbarbutton').contains(page).click()
 })
-When("Correct API data is typed", ()=> {
-  cy.fixture('apiKeys').then((apiKeys) => {
-    cy.get('main section .hfui-settings__option [placeholder="API Key"]').type(apiKeys[0].apiKey)
-    cy.get('main section .hfui-settings__option [placeholder="API Secret"]').type(apiKeys[0].apiSecret)
-})
-cy.get('button').contains('Update Keys').click()
-cy.get('.hfui-statusbar__left > p:last-of-type').contains('UNLOCKED')
-} )
 
 Then("HF status is Connected", ()=> {
   cy.get('.hfui-statusbar__right').within(($statusbar) => {
@@ -68,4 +47,21 @@ When('Any Execute order is open', ()=> {
 })
 Then('When API form is visible', ()=> {
   cy.get('.hfui-orderform__layout-label').should('be.visible')
+})
+Given('Settings modal is open', ()=> {
+  cy.get('header .icon-settings-icon').click()
+  cy.get('.modal__title').contains('Settings')
+})
+When('Click on settings tab {string}', (tab)=>{
+  cy.get('.appsettings-modal__tab').contains(tab).click()
+  cy.get('.appsettings-modal__tab').contains(tab).should('have.class', 'is-active')
+})
+And('Correct API data is typed', ()=> {
+  cy.fixture('apiKeys').then((apiKeys) => {
+    cy.get('.appsettings-modal__input [placeholder="API Key"]').type(apiKeys[0].apiKey)
+    cy.get('.appsettings-modal__input [placeholder="API Secret"]').type(apiKeys[0].apiSecret)
+})
+cy.get('button').contains('Update').click()
+cy.get('.hfui-statusbar__left > p:last-of-type').contains('UNLOCKED')
+
 })
