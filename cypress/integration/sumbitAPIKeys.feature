@@ -15,6 +15,7 @@ Feature: Submit api keys to the HF
             Given Settings modal is open
             When Click on settings tab "API keys"
             And Correct API data is typed
+            Then Configuration message is "Configured"
             And Close modal
             Then HF status is Connected
         Scenario: Go to Trading terminal and try to open any Algo/ Atomic order will not have Not configured banner
