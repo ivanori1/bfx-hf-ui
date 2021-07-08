@@ -19,3 +19,12 @@ as expanding drag and drop, closing
     Scenario: Open, drag, resize and close Chart
         Given "Trading Terminal" page is open
         When Open Component "Chart"
+        And Resize Component
+        And Move Component
+        And Close Component
+        Then No component on layout
+    Scenario: Open, drag, resize and close Order Book
+        Given "Trading Terminal" page is open
+        When Open Component "Order Book"
+        And Resize Component
+        Then Move Component

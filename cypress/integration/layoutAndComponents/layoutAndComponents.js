@@ -66,3 +66,45 @@ Then('Open Component {string}', (componentName)=> {
   cy.get('.modal ul li').contains(componentName).click()
   cy.get('.modal__button').click()
 })
+And('Resize Component', ()=> {
+  cy.get('.react-resizable-handle').trigger('mousedown').trigger('mousemove', { clientX: 1500, clientY: 1500 })
+  cy.get('.react-resizable-hide').click()
+})
+And('Move Component', ()=> {
+  cy.get('.icon-move').trigger('mousedown').trigger('mousemove', { clientX: 1000, clientY: 200 }).trigger('mouseleave')
+  cy.get('.icon-move').click()
+})
+And('Close Component', ()=> {
+  cy.get('.icon-cancel').click()
+})
+
+Given('Component {string} is visible', (component)=> {
+  cy.get('.hfui-panel p').contains(component)
+})
+When('Click on Setting', ()=>{
+  cy.get('.hfui-panel__header .icon-settings-icon').click()
+  cy.get('.header').contains('Settings')
+})
+Then('Stalked view is applied', ()=> {
+  cy.get('.spread').should('be.visible')
+})
+And('Total is visible', ()=> {
+  cy.get('.header div').contains('Total')
+})
+Then('Stalked view is not applied', ()=>{
+  cy.get('.spread').should('not.exist')
+})
+And('Amount is visible', ()=>{
+  cy.get('.header div').contains('Amount')
+})
+
+And('Assert number of rows on Trade table',()=> {
+  cy.get('.ufx-table-wrapper table.ufx-table tr').should('have.length',25)
+})
+And('Click on cog (settings) and test hide zero balances', ()=> {
+  cy.get('.icon-settings-icon').click()
+  cy.get('.header').contains('Settings')
+  cy.get('.ufx-checkbox [type="checkbox"]').uncheck({force: true})
+  cy.get('.footer button').contains('Close').click()
+  cy.get('[role="gridcell"]').contains('0.00000000')
+  })
