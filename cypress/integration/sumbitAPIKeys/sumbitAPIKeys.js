@@ -61,7 +61,7 @@ And('Correct API data is typed', ()=> {
     cy.get('.appsettings-modal__input [placeholder="API Key"]').type(apiKeys[0].apiKey)
     cy.get('.appsettings-modal__input [placeholder="API Secret"]').type(apiKeys[0].apiSecret)
 })
-cy.get('button').contains('Save').click()
+cy.get('.appsettings-modal__content .ufx-button').click()
 cy.get('.hfui-statusbar__left > p:last-of-type').contains('UNLOCKED')
 
 })
