@@ -18,7 +18,15 @@ When('Remove every component', ()=> {
     }
 })
 })
-
+Then('Component button should be visible', ()=> {
+  cy.get('button').then(($btn)=> {
+    if($btn.hasClass('react-joyride__beacon')) {
+      cy.get('.react-joyride__beacon').click()
+      cy.get('[data-action="close"]').click()
+    }
+  })
+  cy.get('.hfui-exchangeinfobar__button').should('be.visible')
+})
 Then('No component on layout', ()=> {
   cy.get('.react-draggable').should('not.exist');
 })

@@ -36,8 +36,8 @@ Given('{string} page is open', (page) => {
 
 Then("HF status is Connected", ()=> {
   cy.get('.hfui-statusbar__right').within(($statusbar) => {
-    cy.wrap($statusbar).find('p').should('contain.text', 'HF Connected')
-    cy.wrap($statusbar).find('span').should('have.class', 'green')
+    cy.wrap($statusbar).find('p:first-of-type').should('contain.text', 'HF Connected')
+    cy.wrap($statusbar).find('span:first-of-type').should('have.class', 'green')
 })
 })
 When('Any Execute order is open', ()=> {

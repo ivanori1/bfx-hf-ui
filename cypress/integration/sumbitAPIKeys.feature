@@ -4,13 +4,9 @@ Feature: Submit api keys to the HF
         Scenario: IF opening app for the first time Create password
             Given Open application
             When Form is visible
-            Then IF Create a password is visible then Save Credentials
-        Scenario: Login to Production
-            Given Form is visible
-            When Select "Production"
-            And Type Password
-            And Click Unlock button
-            Then Trading terminal page is open
+            And IF Create a password is visible then Save Credentials and login to "Production"
+            Then "Trading Terminal" page is open
+
         Scenario: Paste correct API keys and click [Save] will change HF Connected in footer
             Given Settings modal is open
             When Click on settings tab "API keys"

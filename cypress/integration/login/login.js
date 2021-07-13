@@ -56,21 +56,6 @@ When("Click on Save credentials", () => {
   cy.get("button").contains("Save Credentials").click();
 });
 
-Then("Trading terminal page is open", () => {
-  const navTitles = [
-    "Trading Terminal",
-    "Market Data",
-    "Strategy Editor",
-  ];
-
-  cy.get(".hfui-navbarbutton")
-    .eq(0)
-    .should("contain.text", "Trading Terminal")
-    .and("have.class", "active");
-  cy.get(".hfui-navbarbutton").eq(1).should("contain.text", "Market Data");
-  cy.get(".hfui-navbarbutton").eq(2).should("contain.text", "Strategy Editor");
-});
-
 Then('Trading tour should have {int} steps', (steps)=> {
   cy.firstLoginTour(steps)
 })
