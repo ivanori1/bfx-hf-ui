@@ -6,7 +6,7 @@ defineStep("Open application", () => {
   });
 
   defineStep("Form is visible", () => {
-    cy.get('form').should('be.visible')
+    cy.get('form').should('be.visible',{timeout: 60000} )
   });
 
   defineStep('{string} page is open', (page) => {
