@@ -17,7 +17,7 @@ Feature: First login to application
     Scenario: When credentials are saved, new page will be open with TRADING TERMINAL (default selected)
         Given Save Credentials button will be enabled
         When Click on Save credentials
-        Then Trading terminal page is open
+        Then "Trading Terminal" page is open
     Scenario: First time you login Tour with red blinking point will be visible on Plus Icon of Trading Terminal Page
         Given "Trading Terminal" page is open
         When You are on "Trading Terminal" Page
