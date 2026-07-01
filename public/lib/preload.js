@@ -36,6 +36,30 @@ contextBridge.exposeInMainWorld(
     addSaveAllStrategiesResultListner: (cb) => ipcRenderer.on('app_save_all_strategies.result', cb),
     removeSaveAllStrategiesResultListener: () => ipcRenderer.removeAllListeners('app_save_all_strategies.result'),
 
+    // Strategy-aware terminal (node-pty backed shell in the IDE)
+    terminalCreate: ({
+      id, strategyId, cols, rows,
+    }) => ipcRenderer.send('terminal.create', {
+      id, strategyId, cols, rows,
+    }),
+    terminalInput: (id, data) => ipcRenderer.send('terminal.input', { id, data }),
+    terminalResize: (id, cols, rows) => ipcRenderer.send('terminal.resize', { id, cols, rows }),
+    terminalKill: (id) => ipcRenderer.send('terminal.kill', { id }),
+    addTerminalDataListener: (cb) => ipcRenderer.on('terminal.data', cb),
+    addTerminalExitListener: (cb) => ipcRenderer.on('terminal.exit', cb),
+    removeTerminalListeners: () => {
+      ipcRenderer.removeAllListeners('terminal.data')
+      ipcRenderer.removeAllListeners('terminal.exit')
+    },
+
+    // Per-strategy on-disk workspace sync (mirrors code sections to files)
+    syncStrategyWorkspace: ({ strategyId, strategyContent, meta }) => ipcRenderer.send('strategy_workspace.sync', {
+      strategyId, strategyContent, meta,
+    }),
+    stopStrategyWorkspace: (strategyId) => ipcRenderer.send('strategy_workspace.stop', { strategyId }),
+    addStrategyFilesChangedListener: (cb) => ipcRenderer.on('strategy_files.changed', cb),
+    removeStrategyFilesChangedListener: () => ipcRenderer.removeAllListeners('strategy_files.changed'),
+
     removeAllGlobalListeners: () => {
       ipcRenderer.removeAllListeners('app-close')
       ipcRenderer.removeAllListeners('open_settings')

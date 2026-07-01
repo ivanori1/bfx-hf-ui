@@ -24,6 +24,8 @@ const { createAppMenu } = require('../utils/appMenu')
 const { createAppTray } = require('../utils/tray')
 const syncReadUserSettings = require('../utils/syncReadUserSettings')
 const saveStrategiesToZIP = require('../utils/saveStrategiesToZIP')
+const { registerTerminalHandlers, killAllTerminals } = require('./terminal')
+const strategyWorkspace = require('./strategyWorkspace')
 const { ELECTRON_CONTEXT_ALLOWED_URLS } = require('../constants')
 
 const LOG_DIR_PATH = `${os.tmpdir()}/bfx-hf-ui-logs`
@@ -116,6 +118,7 @@ module.exports = class HFUIApplication {
     this.onAllWindowsClosed = this.onAllWindowsClosed.bind(this)
     this.onMainWindowClosed = this.onMainWindowClosed.bind(this)
     this.sendOpenSettingsModalMessage = this.sendOpenSettingsModalMessage.bind(this)
+    this.registerStrategyTerminalIPC = this.registerStrategyTerminalIPC.bind(this)
 
     const isLocked = app.requestSingleInstanceLock()
 
@@ -296,6 +299,37 @@ module.exports = class HFUIApplication {
     })
   }
 
+  // Wires up the strategy-aware terminal: an interactive shell (node-pty)
+  // rendered by xterm.js in the IDE, plus the on-disk workspace that mirrors a
+  // strategy's code sections so CLI tools like `claude` can edit them. Registered
+  // once; the getter resolves the (possibly re-spawned) main window lazily.
+  registerStrategyTerminalIPC() {
+    const getMainWindow = () => this.mainWindow
+
+    registerTerminalHandlers(getMainWindow)
+
+    ipcMain.on('strategy_workspace.sync', async (_, { strategyId, strategyContent, meta } = {}) => {
+      if (!strategyId) {
+        return
+      }
+      try {
+        await strategyWorkspace.syncToFiles(strategyId, strategyContent, meta)
+        strategyWorkspace.startWatch(strategyId, (id, content) => {
+          const win = getMainWindow()
+          if (win && !win.isDestroyed()) {
+            win.webContents.send('strategy_files.changed', { strategyId: id, strategyContent: content })
+          }
+        })
+      } catch (e) {
+        logger.error('strategy_workspace.sync error:', e)
+      }
+    })
+
+    ipcMain.on('strategy_workspace.stop', (_, { strategyId } = {}) => {
+      strategyWorkspace.stopWatch(strategyId)
+    })
+  }
+
   sendOpenSettingsModalMessage() {
     const isVisible = this.mainWindow.isVisible()
     if (!isVisible) {
@@ -329,6 +363,7 @@ module.exports = class HFUIApplication {
     })
 
     this.spawnMainWindow()
+    this.registerStrategyTerminalIPC()
 
     this.tray = createAppTray({
       win: this.mainWindow,
@@ -341,6 +376,8 @@ module.exports = class HFUIApplication {
   }
 
   onMainWindowClosed() {
+    killAllTerminals()
+    strategyWorkspace.stopAllWatchers()
     this.mainWindow = null
   }
 
