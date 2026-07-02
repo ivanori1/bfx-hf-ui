@@ -70,6 +70,36 @@ one lifecycle hook whose body runs in the strategy engine.
 - Keep code in the Honey strategy DSL described below — plain JS using the
   injected helpers (indicators, \`onEnter\`, position helpers, etc.).
 
+## Fixing issues in this strategy
+This strategy may trade with real funds — work like a careful maintainer, not
+a rewriter.
+
+1. **Diagnose first.** Restate the reported issue, read every relevant file
+   under \`sections/\` plus \`strategy.json\`, and identify the root cause, not
+   just the symptom. Signals flow \`defineIndicators\` → \`onPriceUpdate\` /
+   \`onUpdate*\` → position helpers; a bad signal usually originates upstream
+   of where it is noticed.
+2. **Check sibling hooks.** The long/short/closing variants often duplicate
+   logic — if one hook has the bug, its siblings probably do too. Fix or flag
+   them in the same pass.
+3. **Make minimal, surgical edits.** Change only what is broken, match the
+   existing style, and do not refactor working code. Guard against indicator
+   warm-up and missing values instead of letting a hook throw mid-run.
+4. **Verify by reasoning, prescribe a backtest.** Hooks cannot run standalone;
+   they execute inside the Honey engine. Hand-check boundary conditions
+   (warm-up periods, first/last candle, position-state assumptions), then tell
+   the user exactly what to backtest in the app and what outcome confirms the
+   fix (e.g. "entries should only occur after a confirmed cross; signal count
+   on this symbol/timeframe should drop").
+5. **Report clearly.** Summarise the root cause, what changed and why, and any
+   expected behaviour change (more/fewer trades, different entry timing). If
+   anything was ambiguous, state the assumption you made; in interactive
+   sessions ask instead.
+
+Stop and ask rather than guess when the root cause is unclear, when a fix
+would change unrelated hooks' behaviour, or when the request implies changing
+position sizing or risk parameters.
+
 ## This strategy
 - Label: ${label || 'Untitled'}
 - Symbol: ${symbol || 'not set'}
