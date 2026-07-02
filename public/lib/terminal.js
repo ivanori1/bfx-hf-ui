@@ -15,6 +15,22 @@ const getDefaultShell = () => {
   return process.env.SHELL || '/bin/bash'
 }
 
+// When the app itself is launched from a Claude Code shell (common during
+// development), the inherited env carries nested-session markers — notably
+// CLAUDE_CODE_CHILD_SESSION — which make the `claude` CLI inside the terminal
+// treat itself as a child session and skip persisting its history, so
+// `claude --resume` never finds anything. Strip the whole family so the
+// terminal always behaves like a fresh top-level shell.
+const buildEnv = () => {
+  const env = { ...process.env, TERM: 'xterm-256color' }
+  Object.keys(env).forEach((key) => {
+    if (key === 'CLAUDECODE' || key.startsWith('CLAUDE_CODE_')) {
+      delete env[key]
+    }
+  })
+  return env
+}
+
 // Always open in the stable strategy-workspaces root (not the per-strategy id
 // folder) so the cwd does not change between sessions/strategies — this keeps
 // Claude CLI session history and `claude --resume` working. The active
@@ -69,7 +85,7 @@ const registerTerminalHandlers = (getMainWindow) => {
         cols: cols || 80,
         rows: rows || 24,
         cwd: resolveCwd(strategyId),
-        env: { ...process.env, TERM: 'xterm-256color' },
+        env: buildEnv(),
       })
     } catch (e) {
       send('terminal.exit', { id, error: e.message })
