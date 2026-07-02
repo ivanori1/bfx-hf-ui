@@ -3,7 +3,11 @@ const fsp = require('fs/promises')
 const path = require('path')
 const chokidar = require('chokidar')
 
-const { STRATEGY_WORKSPACES_CWD } = require('../constants')
+const {
+  STRATEGY_WORKSPACES_CWD,
+  LOG_PATH_DS_BITFINEX,
+  LOG_PATH_API_SERVER,
+} = require('../constants')
 
 // Mirrors STRATEGY_IDE_SECTIONS from
 // bfx-hf-ui-core/src/components/StrategyEditor/StrategyEditor.helpers.js
@@ -81,7 +85,9 @@ a rewriter.
 
 1. **Diagnose first.** Restate the reported issue, read every relevant file
    under \`sections/\` plus \`strategy.json\`, and identify the root cause, not
-   just the symptom. Signals flow \`defineIndicators\` → \`onPriceUpdate\` /
+   just the symptom. If the app showed an error (toasts show only one line),
+   read the full stack trace in the data-server log first:
+   \`${LOG_PATH_DS_BITFINEX}\`. Signals flow \`defineIndicators\` → \`onPriceUpdate\` /
    \`onUpdate*\` → position helpers; a bad signal usually originates upstream
    of where it is noticed.
 2. **Check sibling hooks.** The long/short/closing variants often duplicate
@@ -131,6 +137,15 @@ between sessions, so \`claude --resume\` / \`claude --continue\` work here.
   syncs it straight into the running Honey strategy editor.
 - When the user switches strategies in the app, \`current\` repoints; re-read
   \`current/CLAUDE.md\` to pick up the new strategy's context.
+
+## Debugging
+If something fails in the app (backtests, strategy execution, connectivity),
+the error toast shows only one line — the full stack traces are in the app
+logs. Check them before guessing:
+- \`${LOG_PATH_DS_BITFINEX}\` — data server: backtest execution, market data
+  sync, strategy runtime errors
+- \`${LOG_PATH_API_SERVER}\` — API server: auth, orders, exchange connectivity
+Recent errors are at the end (\`tail\` them).
 `
 
 // Write `content` to `filePath` only when it differs from what's on disk, to
