@@ -4,7 +4,7 @@
 // websocket/db layers, so results match the in-app backtester. Public market
 // data only; no API keys required.
 //
-// usage: node scripts/backtest-strategy.js <workspace-dir> [options]
+// usage: node scripts/backtest-strategy.js <workspace-dir-or-strategy-name> [options]
 //   --from <date|ms>   range start (default: 7 days ago)
 //   --to <date|ms>     range end (default: now)
 //   --capital <n>      capital allocation (default: 1000)
@@ -37,6 +37,57 @@ const {
 } = require('bfx-hf-data-server/lib/bt/fetch_data')
 
 const STUB_MARKER = 'this strategy hook is currently empty'
+const WORKSPACES_ROOT = path.join(
+  process.env.HOME || process.env.USERPROFILE || '',
+  '.bitfinexhoney/strategy-workspaces',
+)
+
+// Accept either a workspace path or a strategy label; labels are resolved by
+// scanning the workspaces root (a strategy gets a workspace folder the first
+// time it is opened in the app with the terminal available).
+const resolveWorkspace = (arg) => {
+  const asPath = path.resolve(arg)
+  if (fs.existsSync(path.join(asPath, 'strategy.json'))) {
+    return fs.realpathSync(asPath)
+  }
+
+  if (!fs.existsSync(WORKSPACES_ROOT)) {
+    console.error(`${arg} is not a workspace dir and ${WORKSPACES_ROOT} does not exist`)
+    process.exit(1)
+  }
+
+  const matches = fs.readdirSync(WORKSPACES_ROOT, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && d.name !== 'current')
+    .map((d) => {
+      const metaFile = path.join(WORKSPACES_ROOT, d.name, 'strategy.json')
+      try {
+        const meta = JSON.parse(fs.readFileSync(metaFile, 'utf-8'))
+        return { id: d.name, meta, mtime: fs.statSync(metaFile).mtimeMs }
+      } catch (e) {
+        return null
+      }
+    })
+    .filter((w) => w && (w.meta.label || '').toLowerCase() === arg.toLowerCase())
+
+  if (matches.length === 0) {
+    console.error(`no workspace found for strategy "${arg}" under ${WORKSPACES_ROOT}`)
+    console.error('open the strategy in the app once (with the Terminal tab available) to materialise it')
+    process.exit(1)
+  }
+
+  if (matches.length > 1) {
+    console.error(`"${arg}" matches ${matches.length} workspaces — pass the folder instead:`)
+    matches
+      .sort((a, b) => b.mtime - a.mtime)
+      .forEach(({ id, meta, mtime }) => {
+        console.error(`  ${path.join(WORKSPACES_ROOT, id)}`)
+        console.error(`    ${meta.symbol || '?'} ${meta.timeframe || '?'} — last synced ${new Date(mtime).toISOString()}`)
+      })
+    process.exit(1)
+  }
+
+  return path.join(WORKSPACES_ROOT, matches[0].id)
+}
 
 const parseArgs = (argv) => {
   const [workspace] = argv.filter((a) => !a.startsWith('--'))
@@ -137,11 +188,11 @@ const main = async () => {
   } = parseArgs(process.argv.slice(2))
 
   if (!workspace) {
-    console.error('usage: node scripts/backtest-strategy.js <workspace-dir> [--from d] [--to d] [--capital n] [--seed n] [--trades] [--json]')
+    console.error('usage: node scripts/backtest-strategy.js <workspace-dir-or-strategy-name> [--from d] [--to d] [--capital n] [--seed n] [--trades] [--json]')
     process.exit(1)
   }
 
-  const dir = fs.realpathSync(path.resolve(workspace))
+  const dir = resolveWorkspace(workspace)
   const { meta, strategyContent } = readWorkspace(dir)
   const { symbol, timeframe } = meta
   const margin = !!(meta.strategyOptions && meta.strategyOptions.margin)
