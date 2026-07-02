@@ -13,7 +13,8 @@ const LOCAL_STORE_CWD = `${os.homedir()}/.bitfinexhoney`
 // Per-strategy on-disk workspaces used by the strategy-aware terminal. Each
 // strategy's code sections are mirrored here as files so CLI tools (e.g. the
 // `claude` CLI) can read/write them, and a watcher syncs edits back into the app.
-const STRATEGY_WORKSPACES_CWD = `${LOCAL_STORE_CWD}/strategy-workspaces`
+const STRATEGY_WORKSPACES_CWD = process.env.HF_STRATEGY_WORKSPACES_CWD
+  || `${LOCAL_STORE_CWD}/strategy-workspaces`
 
 const ELECTRON_CONTEXT_ALLOWED_URLS = ['https://app.eu.pendo.io']
 
