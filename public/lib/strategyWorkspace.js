@@ -84,6 +84,20 @@ ${apiDocs || '(API docs unavailable in this build — refer to the in-app Help p
 `
 }
 
+const generateRootClaudeMd = () => `# Bitfinex Honey — strategy workspaces
+
+This is the stable working directory for the in-app terminal. It does not change
+between sessions, so \`claude --resume\` / \`claude --continue\` work here.
+
+- Each subfolder (named by strategy id) is one strategy's workspace, containing
+  \`CLAUDE.md\`, read-only \`strategy.json\`, and editable \`sections/*.js\` hook files.
+- \`current/\` is a symlink to the strategy currently open in the app. Start there:
+  read \`current/CLAUDE.md\` and edit files under \`current/sections/\` — saving a file
+  syncs it straight into the running Honey strategy editor.
+- When the user switches strategies in the app, \`current\` repoints; re-read
+  \`current/CLAUDE.md\` to pick up the new strategy's context.
+`
+
 // Write `content` to `filePath` only when it differs from what's on disk, to
 // avoid spurious watcher events. Returns true if a write happened.
 const writeIfChanged = async (filePath, content) => {
@@ -105,6 +119,28 @@ const buildContentMap = (strategyContent = {}) => {
     map[section] = strategyContent[section] || ''
   })
   return map
+}
+
+// Point the stable `current` symlink at the active strategy and refresh the
+// root CLAUDE.md, so the terminal can stay in one directory (keeping Claude
+// session history / --resume intact) while still exposing the live strategy.
+const updateCurrentPointer = async (strategyId) => {
+  const root = STRATEGY_WORKSPACES_CWD
+  await fsp.mkdir(root, { recursive: true })
+  await writeIfChanged(path.join(root, 'CLAUDE.md'), generateRootClaudeMd())
+
+  const linkPath = path.join(root, 'current')
+  try {
+    await fsp.rm(linkPath, { force: true, recursive: true })
+    await fsp.symlink(getWorkspacePath(strategyId), linkPath, 'dir')
+  } catch (e) {
+    // symlinks may be unavailable (e.g. permissions); fall back to a pointer file
+    try {
+      await writeIfChanged(path.join(root, 'CURRENT_STRATEGY.txt'), `${strategyId}\n`)
+    } catch (_e) {
+      // best-effort only
+    }
+  }
 }
 
 // Materialise a strategy's sections + context onto disk. Idempotent.
@@ -133,6 +169,7 @@ const syncToFiles = async (strategyId, strategyContent = {}, meta = {}) => {
   )
 
   knownContent.set(strategyId, contentMap)
+  await updateCurrentPointer(strategyId)
   return workspacePath
 }
 
@@ -203,6 +240,7 @@ const stopAllWatchers = async () => {
 module.exports = {
   STRATEGY_SECTIONS,
   getWorkspacePath,
+  getWorkspacesRoot: () => STRATEGY_WORKSPACES_CWD,
   syncToFiles,
   readFromFiles,
   startWatch,

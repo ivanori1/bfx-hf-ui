@@ -15,14 +15,18 @@ const getDefaultShell = () => {
   return process.env.SHELL || '/bin/bash'
 }
 
-const resolveCwd = (strategyId) => {
-  if (strategyId) {
-    const workspacePath = strategyWorkspace.getWorkspacePath(strategyId)
-    if (fs.existsSync(workspacePath)) {
-      return workspacePath
-    }
+// Always open in the stable strategy-workspaces root (not the per-strategy id
+// folder) so the cwd does not change between sessions/strategies — this keeps
+// Claude CLI session history and `claude --resume` working. The active
+// strategy is reachable via the `current` symlink maintained on sync.
+const resolveCwd = () => {
+  const root = strategyWorkspace.getWorkspacesRoot()
+  try {
+    fs.mkdirSync(root, { recursive: true })
+    return root
+  } catch (e) {
+    return LOCAL_STORE_CWD
   }
-  return LOCAL_STORE_CWD
 }
 
 const killTerminal = (id) => {
