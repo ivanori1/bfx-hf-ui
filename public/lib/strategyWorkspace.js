@@ -69,6 +69,11 @@ one lifecycle hook whose body runs in the strategy engine.
 - \`strategy.json\` is read-only context (symbol, timeframe, options). Do not edit it.
 - Keep code in the Honey strategy DSL described below — plain JS using the
   injected helpers (indicators, \`onEnter\`, position helpers, etc.).
+- The engine in this build is LONG-ONLY: it rejects any order that would take
+  the net position negative ("short positions are not allowed in this
+  version"), in backtests and live. Never open short positions
+  (\`openShortPositionMarket\` etc.) — on bearish signals close the open long
+  instead. Do not try to patch the engine; this is a product limitation.
 
 ## Fixing issues in this strategy
 This strategy may trade with real funds — work like a careful maintainer, not
