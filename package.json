@@ -139,25 +139,25 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.18",
-    "chokidar": "^3.6.0",
-    "node-pty": "^1.1.0",
     "bfx-hf-data-server": "git+https://github.com/bitfinexcom/bfx-hf-data-server.git#v5.0.0",
     "bfx-hf-ext-plugin-bitfinex": "git+https://github.com/bitfinexcom/bfx-hf-ext-plugin-bitfinex.git#v1.0.13",
     "bfx-hf-models": "git+https://github.com/bitfinexcom/bfx-hf-models.git#v4.0.1",
     "bfx-hf-models-adapter-lowdb": "git+https://github.com/bitfinexcom/bfx-hf-models-adapter-lowdb.git#v1.0.6",
     "bfx-hf-server": "git+https://github.com/bitfinexcom/bfx-hf-server.git#v10.1.1",
     "bfx-hf-util": "git+https://github.com/bitfinexcom/bfx-hf-util#v1.0.12",
+    "chokidar": "^3.6.0",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "dotenv": "^16.6.1",
     "electron-log": "^4.4.8",
     "electron-root-path": "git+https://github.com/dmytroshch/npm-electron-root-path.git#update-deps",
     "electron-serve": "^1.3.0",
-    "electron-updater": "^6.8.9",
+    "electron-updater": "^6.1.4",
     "electron-util": "^0.17.2",
     "electron-window-state": "^5.0.3",
     "env-cmd": "^10.1.0",
-    "extract-zip": "^2.0.1"
+    "extract-zip": "^2.0.1",
+    "node-pty": "^1.1.0"
   },
   "browserslist": {
     "production": [
