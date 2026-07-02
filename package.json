@@ -96,7 +96,7 @@
     "electron": "cross-env electron .",
     "electron-debug": "cross-env REACT_APP_ELECTRON_DEBUG='true' electron --inspect=9229 --remote-debugging-port=9222 .",
     "rebuild": "electron-rebuild -f -w node-pty",
-    "postinstall": "electron-rebuild -f -w node-pty || true && node scripts/patch-bfx-hf-data-server.js",
+    "postinstall": "electron-rebuild -f -w node-pty || true && node scripts/patch-hf-deps.js",
     "pack": "cross-env ./node_modules/.bin/electron-builder --dir",
     "deploy": "npm run build && cross-env electron-builder build -c.extraMetadata.main=build/electron.js -lwm --publish always",
     "build-all": "npm run build && cross-env electron-builder build -c.extraMetadata.main=build/electron.js -lwm --publish never",
